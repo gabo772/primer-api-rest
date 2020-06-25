@@ -11,9 +11,9 @@ var usuarios = []
 //**********Conexion a base de datos 
 
 var conexion = {
-    user: $USERNAME,
-    password: $PASSWORD,
-    server: $DATABASE_HOST,
+    user: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    server: process.env.DATABASE_HOST,
     database: 'test1',
     "options": {
         "encrypt": true,
