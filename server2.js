@@ -296,7 +296,7 @@ app.use(function (req, res, next) {
 });
 
 
-app.listen(8090, () => {
+app.listen(process.env.PORT || 8090, () => {
     //sConectar()
     console.log("El servidor está inicializado en el puerto 8090");
 
