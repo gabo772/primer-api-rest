@@ -1,6 +1,6 @@
 const express = require('express')
-const mysql = require('mysql')
 
+const sql_server = require('mssql')
 const app = express()
 
 
@@ -10,28 +10,19 @@ var usuarios = []
 
 //**********Conexion a base de datos 
 
-let conexionMysql = mysql.createConnection({
-    host: 'localhost',
+var conexion = {
+    user: 'gabriel',
+    password: 'Demon666',
+    server: 'baltazar01.database.windows.net',
     database: 'test1',
-    user: 'root',
-    password: '2020',
-})
+    "options": {
+        "encrypt": true,
+        "enableArithAbort": true
+    },
+};
 
 
-Conectar = () => {
-    conexionMysql.connect((error) => {
-        if (error) {
-            console.log('Error de conexión: ' + error.stack);
-            return;
-        }
 
-        console.log('Conectado con el identificador ' + conexionMysql.threadId)
-    })
-}
-
-Desconectar = () => {
-    conexionMysql.end();
-}
 
 
 
@@ -79,30 +70,31 @@ app.get('/', function (req, res) {
     res.send(respuesta);
 });
 app.get('/usuarios', function (req, res) {
-    let sql = "SELECT user.id AS ID,username,password,description,photo  FROM user INNER JOIN type ON user.id_type=type.id"
+    let sql = "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]"
     respuesta = {
         error: false,
         codigo: 200,
         mensaje: ''
     };
+    sql_server.connect(conexion).then((pool) => {
+        return pool.request().query(sql)
+    }).then((result) => {
 
-    conexionMysql.query(sql, (error, results, fields) => {
-
-        if (results.length == 0) {
+        if (result.recordset.length == 0) {
             respuesta = {
                 error: true,
                 codigo: 501,
                 mensaje: 'No existen usuarios'
             };
         } else {
-            for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < result.recordset.length; i++) {
 
                 usuarios.push({
-                    id: results[i].ID,
-                    nombre: results[i].username,
-                    password: results[i].password,
-                    tipo_de_usuario: results[i].description,
-                    foto: results[i].photo
+                    id: result.recordset[i].ID,
+                    nombre: result.recordset[i].username,
+                    password: result.recordset[i].password,
+                    tipo_de_usuario: result.recordset[i].description,
+                    foto: result.recordset[i].photo
                 })
             }
             respuesta = {
@@ -116,10 +108,11 @@ app.get('/usuarios', function (req, res) {
         }
         res.send(respuesta);
 
+
     })
 
 });
-app.get('/usuarios/:id', function (req, res) {
+/* app.get('/usuarios/:id', function (req, res) {
     const { id } = req.params
     respuesta = {
         error: false,
@@ -292,7 +285,7 @@ app.delete('/usuario/delete/', function (req, res) {
         res.send(respuesta);
     })
 
-});
+}); */
 app.use(function (req, res, next) {
     respuesta = {
         error: true,
@@ -304,7 +297,7 @@ app.use(function (req, res, next) {
 
 
 app.listen(8090, () => {
-    Conectar()
+    //sConectar()
     console.log("El servidor está inicializado en el puerto 8090");
 
 });
