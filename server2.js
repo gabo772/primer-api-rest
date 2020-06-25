@@ -11,9 +11,9 @@ var usuarios = []
 //**********Conexion a base de datos 
 
 var conexion = {
-    user: 'gabriel',
-    password: 'Demon666',
-    server: 'baltazar01.database.windows.net',
+    user: $USERNAME,
+    password: $PASSWORD,
+    server: $DATABASE_HOST,
     database: 'test1',
     "options": {
         "encrypt": true,
