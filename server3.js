@@ -88,7 +88,7 @@ app.get("/getinfoclient", auth(), (req, res, next) => {
       },
     });
   } else {
-    res.send("No existe cliente con ese rut ");
+    res.send({ msj: "No existe cliente con ese rut ", obj: req.body });
   }
 });
 
