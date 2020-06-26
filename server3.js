@@ -109,7 +109,7 @@ app.get("/getrematesbyrut", auth(), (req, res, next) => {
   }
 });
 
-let port = env.process.PORT || "8090";
+let port = process.env.PORT || "8090";
 app.listen(port, () => {
   console.log(`servidor corriendo en puerto ${port}`);
 });
