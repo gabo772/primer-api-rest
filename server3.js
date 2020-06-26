@@ -28,9 +28,9 @@ app.use((req, res, next) => {
 });
 
 app.get("/getinfoclient", auth(), (req, res, next) => {
-  console.log(req.param("rut"));
+  console.log(req.params.rut);
 
-  if (req.param("rut") == "134893133") {
+  if (req.params.rut == "134893133") {
     res.send({
       success: true,
       message: "",
@@ -110,7 +110,7 @@ app.get("/getinfoclient", auth(), (req, res, next) => {
 });
 
 app.get("/getrematesbyrut", auth(), (req, res, next) => {
-  if (req.param("rut") == "134893133") {
+  if (req.params.rut == "134893133") {
     res.send({
       success: true,
       message: "",
