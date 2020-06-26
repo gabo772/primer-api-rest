@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 let auth = require("./auth/authentication");
 
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -28,8 +28,9 @@ app.use((req, res, next) => {
 });
 
 app.get("/getinfoclient", auth(), (req, res, next) => {
-  console.log(req.params);
-  if (req.params.rut == "134893133") {
+  console.log(req.param("rut"));
+
+  if (req.param("rut") == "134893133") {
     res.send({
       success: true,
       message: "",
@@ -109,7 +110,7 @@ app.get("/getinfoclient", auth(), (req, res, next) => {
 });
 
 app.get("/getrematesbyrut", auth(), (req, res, next) => {
-  if (req.params.rut == "134893133") {
+  if (req.param("rut") == "134893133") {
     res.send({
       success: true,
       message: "",
