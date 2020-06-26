@@ -27,8 +27,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/getinfoclient", auth(), (req, res, next) => {
-  console.log(req.params.rut);
+app.get("/getinfoclient/:rut", auth(), (req, res, next) => {
+  console.log(req.params);
 
   if (req.params.rut == "134893133") {
     res.send({
