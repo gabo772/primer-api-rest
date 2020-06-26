@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 let auth = require("./auth/authentication");
 
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:4567");
   next();
