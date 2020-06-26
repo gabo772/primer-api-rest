@@ -7,7 +7,10 @@ let auth = require("./auth/authentication");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:4567");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://macal1581012468.zendesk.com/"
+  );
   next();
 });
 
