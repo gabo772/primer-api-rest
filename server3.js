@@ -109,7 +109,7 @@ app.get("/getinfoclient/:rut", auth(), (req, res, next) => {
   }
 });
 
-app.get("/getrematesbyrut", auth(), (req, res, next) => {
+app.get("/getrematesbyrut/:rut", auth(), (req, res, next) => {
   if (req.params.rut == "134893133") {
     res.send({
       success: true,
