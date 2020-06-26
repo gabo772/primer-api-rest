@@ -28,8 +28,8 @@ app.use((req, res, next) => {
 });
 
 app.get("/getinfoclient", auth(), (req, res, next) => {
-  console.log(req.body);
-  if (req.body.rut == "134893133") {
+  console.log(req.params);
+  if (req.params.rut == "134893133") {
     res.send({
       success: true,
       message: "",
@@ -104,12 +104,12 @@ app.get("/getinfoclient", auth(), (req, res, next) => {
       },
     });
   } else {
-    res.send({ msj: "No existe cliente con ese rut ", obj: req.body });
+    res.send({ msj: "No existe cliente con ese rut ", obj: req.params });
   }
 });
 
 app.get("/getrematesbyrut", auth(), (req, res, next) => {
-  if (req.body.rut == "134893133") {
+  if (req.params.rut == "134893133") {
     res.send({
       success: true,
       message: "",
