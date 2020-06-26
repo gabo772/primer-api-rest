@@ -1,116 +1,106 @@
-const express = require('express')
+const express = require("express");
 
-const sql_server = require('mssql')
-const app = express()
+const sql_server = require("mssql");
+const app = express();
 
+var usuarios = [];
 
-var usuarios = []
-
-
-
-//**********Conexion a base de datos 
+//**********Conexion a base de datos
 
 var conexion = {
-    user: process.env.USERNAME,
-    password: process.env.PASSWORD,
-    server: process.env.DATABASE_HOST,
-    database: 'test1',
-    "options": {
-        "encrypt": true,
-        "enableArithAbort": true
-    },
+  user: process.env.USERNAME,
+  password: process.env.PASSWORD,
+  server: process.env.DATABASE_HOST,
+  database: "test1",
+  options: {
+    encrypt: true,
+    enableArithAbort: true,
+  },
 };
 
-
-
-
-
-
-
-
-
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
+  // Website you wish to allow to connect
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request headers you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  //res.setHeader('Access-Control-Allow-Credentials', true);
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    //res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-
-})
-
+  // Pass to next layer of middleware
+  next();
+});
 
 let respuesta = {
-    error: false,
-    codigo: 200,
-    mensaje: ''
+  error: false,
+  codigo: 200,
+  mensaje: "",
 };
 
-app.get('/', function (req, res) {
-    respuesta = {
-        error: true,
-        codigo: 200,
-        mensaje: 'Punto de inicio'
-    };
-    res.send(respuesta);
+app.get("/", function (req, res) {
+  respuesta = {
+    error: true,
+    codigo: 200,
+    mensaje: "Punto de inicio",
+  };
+  res.send(respuesta);
 });
-app.get('/usuarios', function (req, res) {
-    let sql = "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]"
-    respuesta = {
-        error: false,
-        codigo: 200,
-        mensaje: ''
-    };
-    sql_server.connect(conexion).then((pool) => {
-        return pool.request().query(sql)
-    }).then((result) => {
-
-        if (result.recordset.length == 0) {
-            respuesta = {
-                error: true,
-                codigo: 501,
-                mensaje: 'No existen usuarios'
-            };
-        } else {
-            for (var i = 0; i < result.recordset.length; i++) {
-
-                usuarios.push({
-                    id: result.recordset[i].ID,
-                    nombre: result.recordset[i].username,
-                    password: result.recordset[i].password,
-                    tipo_de_usuario: result.recordset[i].description,
-                    foto: result.recordset[i].photo
-                })
-            }
-            respuesta = {
-                error: false,
-                codigo: 200,
-                mensaje: 'Se han listado los usuarios exitosamente',
-                respuesta: usuarios
-            };
-            usuarios = []
-
-        }
-        res.send(respuesta);
-
-
+app.get("/usuarios", function (req, res) {
+  let sql =
+    "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]";
+  respuesta = {
+    error: false,
+    codigo: 200,
+    mensaje: "",
+  };
+  sql_server
+    .connect(conexion)
+    .then((pool) => {
+      return pool.request().query(sql);
     })
-
+    .then((result) => {
+      if (result.recordset.length == 0) {
+        respuesta = {
+          error: true,
+          codigo: 501,
+          mensaje: "No existen usuarios",
+        };
+      } else {
+        for (var i = 0; i < result.recordset.length; i++) {
+          usuarios.push({
+            id: result.recordset[i].ID,
+            nombre: result.recordset[i].username,
+            password: result.recordset[i].password,
+            tipo_de_usuario: result.recordset[i].description,
+            foto: result.recordset[i].photo,
+          });
+        }
+        respuesta = {
+          error: false,
+          codigo: 200,
+          mensaje: "Se han listado los usuarios exitosamente",
+          respuesta: usuarios,
+        };
+        usuarios = [];
+      }
+      res.send(respuesta);
+    });
 });
 /* app.get('/usuarios/:id', function (req, res) {
     const { id } = req.params
@@ -287,17 +277,15 @@ app.delete('/usuario/delete/', function (req, res) {
 
 }); */
 app.use(function (req, res, next) {
-    respuesta = {
-        error: true,
-        codigo: 404,
-        mensaje: 'URL no encontrada'
-    };
-    res.status(404).send(respuesta);
+  respuesta = {
+    error: true,
+    codigo: 404,
+    mensaje: "URL no encontrada",
+  };
+  res.status(404).send(respuesta);
 });
 
-
-app.listen(process.env.PORT || 8090, () => {
-    //sConectar()
-    console.log("El servidor está inicializado en el puerto 8090");
-
+let port = env.process.PORT || "8090";
+app.listen(port, () => {
+  console.log(`servidor corriendo en puerto ${port}`);
 });
