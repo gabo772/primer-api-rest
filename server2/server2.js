@@ -32,7 +32,7 @@ app.use((req, res, next) => {
   // Request methods you wish to allow
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE"
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
 
   // Request headers you wish to allow
@@ -55,7 +55,7 @@ let respuesta = {
   mensaje: "",
 };
 
-app.get("/", function (req, res) {
+app.get("/", auth(), function (req, res) {
   respuesta = {
     error: true,
     codigo: 200,
