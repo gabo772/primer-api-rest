@@ -63,6 +63,10 @@ app.get("/", auth(), function (req, res) {
   };
   res.send(respuesta);
 });
+
+app.options(auth(), (req, res, next) => {
+  res.send(200)
+})
 app.get("/usuarios", auth(), (req, res) => {
   let sql =
     "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]";
