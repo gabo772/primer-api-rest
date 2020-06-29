@@ -3,6 +3,8 @@ const express = require("express");
 const sql_server = require("mssql");
 const app = express();
 
+let auth = require('./auth/authentication')
+
 var usuarios = [];
 
 //**********Conexion a base de datos
@@ -61,7 +63,7 @@ app.get("/", function (req, res) {
   };
   res.send(respuesta);
 });
-app.get("/usuarios", function (req, res) {
+app.get("/usuarios", auth(), (req, res) => {
   let sql =
     "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]";
   respuesta = {
