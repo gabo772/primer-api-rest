@@ -25,6 +25,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+//options
 app.options((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
