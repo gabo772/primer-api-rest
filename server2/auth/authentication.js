@@ -9,14 +9,18 @@ module.exports = function () {
         }
 
         var user = basicAuth(req);
+        console.log(req.headers);
+
         if (
             !user ||
             user.name !== credentials.user ||
             user.pass !== credentials.password
         ) {
             res.set("WWW-Authenticate", "Basic realm=Authorization Required");
-            return res.send(401);
+            return res.sendStatus(401);
         }
+        res.status(200)
         next();
+
     };
 };

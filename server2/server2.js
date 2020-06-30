@@ -10,9 +10,9 @@ var usuarios = [];
 //**********Conexion a base de datos
 
 var conexion = {
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
-  server: process.env.DATABASE_HOST,
+  user: process.env.USER_SERVER || "gabriel",
+  password: process.env.PASS_SERVER || "Demon666",
+  server: process.env.DATABASE_HOST || "baltazar01.database.windows.net",
   database: "test1",
   options: {
     encrypt: true,
@@ -25,26 +25,38 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//options
-app.options((req, res, next) => {
+
+//cors
+app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "*"
+    "http://localhost:3000"
   );
 
   // Request methods you wish to allow
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
 
   // Request headers you wish to allow
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type,Accept,Authorization"
+    "Origin, X-Requested-With,content-type,Accept,Authorization"
   );
+  res.setHeader('Access-Control-Allow-Credentials', "true");
 
-  next();
+  // response to preflight request 
+  if ('OPTIONS' === req.method) {
+    //respond with 200
+    res.send(200);
+
+  }
+  else {
+    //move on
+    next();
+  }
+
 });
 
 let respuesta = {
@@ -62,9 +74,9 @@ app.get("/", auth(), function (req, res) {
   res.send(respuesta);
 });
 
-app.options(auth(), (req, res, next) => {
-  res.send(200)
-})
+
+
+
 app.get("/usuarios", auth(), (req, res) => {
   let sql =
     "SELECT [user].[id] AS ID,[username],[password],[description],[photo]  FROM [test1].[user] INNER JOIN [test1].[type] ON [test1].[user].[id_type]=[test1].[type].[id]";
@@ -103,7 +115,7 @@ app.get("/usuarios", auth(), (req, res) => {
         };
         usuarios = [];
       }
-      res.send(respuesta);
+      res.status(200).send(respuesta);
     });
 });
 /* app.get('/usuarios/:id', function (req, res) {
