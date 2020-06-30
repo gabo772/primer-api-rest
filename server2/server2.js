@@ -28,6 +28,7 @@ app.use(bodyParser.json());
 
 //cors
 app.use((req, res, next) => {
+  //ORIGIN DE DESARROLLO
   res.setHeader(
     "Access-Control-Allow-Origin",
     "http://localhost:3000"
