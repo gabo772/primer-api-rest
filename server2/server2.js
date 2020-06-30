@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "http://localhost:3000"
+    "https://rosario-app.herokuapp.com/"
   );
 
   // Request methods you wish to allow
